@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { trpc } from "../utils/trpc";
@@ -29,6 +28,7 @@ const Home: NextPage = () => {
           <h1 className="mb-6 text-5xl font-medium">{timeUsed}</h1>
           <p className="text-lg">{motd}</p>
           <AuthShowcase />
+          <PostList />
           <div className="container flex flex-col items-center justify-center md:flex-row">
             <button
               className="m-5 w-4/5 rounded p-7 text-slate-700 shadow-lg md:w-2/5"
@@ -77,7 +77,7 @@ const AuthShowcase: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white">
+      <p className="text-center text-2xl text-black">
         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
         {secretMessage && <span> - {secretMessage}</span>}
       </p>
@@ -87,6 +87,21 @@ const AuthShowcase: React.FC = () => {
       >
         {sessionData ? "Sign out" : "Sign in"}
       </button>
+    </div>
+  );
+};
+
+const PostList: React.FC = () => {
+  const { data } = trpc.example.getAll.useQuery();
+
+  if (!data) return <div>Loading...</div>;
+
+  return (
+    <div>
+      <p>Hello</p>
+      {data.map((post) => {
+        return <div key={post.id}>{post.id}</div>;
+      })}
     </div>
   );
 };

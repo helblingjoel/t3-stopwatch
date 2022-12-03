@@ -13,4 +13,24 @@ export const exampleRouter = router({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.example.findMany();
   }),
+
+  createTest: publicProcedure
+    .input(z.object({ message: z.string() }).nullish())
+    .mutation(async ({ input, ctx }) => {
+      const result = await ctx.prisma.testData.create({
+        data: {
+          data: message,
+        },
+      });
+
+      return { created: input };
+    }),
+
+  // createTest: publicProcedure.input(({ ctx }) => {
+  //   return ctx.prisma.testData.create({
+  //     data: {
+  //       data: "Hello world",
+  //     },
+  //   });
+  // }),
 });
